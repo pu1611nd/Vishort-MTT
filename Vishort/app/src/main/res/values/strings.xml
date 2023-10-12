@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Vishort</string>
+    <string name="home">Home</string>
+    <string name="add">Add Post</string>
+    <string name="search">Search</string>
+    <string name="notification">Notification</string>
+    <string name="profile">Profile</string>
+
+    <string name="video">Video</string>
+    <string name="user">User</string>
+
+    <string name="facebook_app_id">739348734215157</string>
+    <string name="fb_login_protocol_scheme">fb739348734215157</string>
+    <string name="facebook_client_token">56789</string>
+
+
+    <string name="notification_channel_name">Default</string>
+    <string name="notification_download_description">Should not taker longer than a few seconds.</string>
+    <string name="notification_download_title">Download file…</string>
+    <string name="notification_channel_id">default</string>
+
+
+
+
+
+    <string name="video_shoot_tip">Drag to select the segment within %d second that you want to post！</string>
+    <string name="trimmed_done">video trim completed！</string>
+    <string name="trimming">trimming video...</string>
+
+</resources>

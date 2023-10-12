@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".Activity.LogInActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_60sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:text="Đăng nhập Vishort"
+            android:textColor="@color/primaryText"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginLeft="@dimen/_13sdp"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="@dimen/_13sdp"
+            android:background="@drawable/background_input"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:src="@drawable/icon_user" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonPhone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/background_button_log"
+                android:text="Đăng nhâp số điện thoại"
+                android:textColor="@color/secondaryText"
+                android:textSize="14sp"
+                android:textStyle="normal"
+                app:backgroundTint="@color/input_background" />
+
+        </LinearLayout>
+        <FrameLayout
+            android:layout_marginStart="@dimen/_13sdp"
+            android:layout_marginEnd="@dimen/_13sdp"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/buttonFacebook"
+                android:padding="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                app:backgroundTint="@color/input_background" />
+        </FrameLayout>
+
+
+        <com.developer.gbuttons.GoogleSignInButton
+            android:id="@+id/buttonGoogle"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:text="Tiếp tục với Google"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            app:isDarkTheme="true" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginLeft="@dimen/_13sdp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="@dimen/_13sdp"
+            android:background="@drawable/background_input"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:src="@drawable/icon_twitter" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonTwitter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/background_button_log"
+                android:text="Tiếp tục với Twitter"
+                android:textColor="@color/secondaryText"
+                android:textSize="14sp"
+                android:textStyle="normal"
+                app:backgroundTint="@color/input_background" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="40dp"
+            android:background="@color/primaryText" />
+
+
+
+        <LinearLayout
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="160dp"
+            android:layout_marginEnd="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_10ssp"
+                android:text="Bằng cách tiếp tục , bạn đồng ý với "
+                android:textColor="@color/secondaryText" />
+
+            <TextView
+                android:id="@+id/textDieuKhoanDichVu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_10ssp"
+                android:text="Điều khoản dịch vụ "
+                android:textColor="@color/primaryText"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_10ssp"
+                android:text="của chúng tôi và thừa nhận rằng bạn đã đọc "
+                android:textColor="@color/secondaryText" />
+
+            <TextView
+                android:id="@+id/textQuyenRiengTu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_10ssp"
+                android:text="Quyền riêng tư"
+                android:textColor="@color/primaryText"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/_10ssp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:text="để tìm hiểu cách chúng tôi thu thập, sử dụng và chia sẻ dữ liệu của bạn"
+            android:textColor="@color/secondaryText" />
+
+
+    </LinearLayout>
+
+
+</ScrollView>
