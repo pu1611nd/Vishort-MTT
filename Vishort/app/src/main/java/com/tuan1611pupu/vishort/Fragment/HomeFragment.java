@@ -705,12 +705,14 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
                                 // Thực hiện các hành động khi người dùng đã unlike
                                 playerBinding.save.setLiked(false);
                                 isSave = false;
+                                 Log.d("VALIDATION_SAVE_VIDEO","VALIDATION_SAVE_VIDEO_01");
                             }
                         } else {
                             // userIdToCheck không tồn tại trong danh sách like hoặc có giá trị null
                             // Thực hiện các hành động khi không tìm thấy userId
                             playerBinding.save.setLiked(false);
                             isSave = false;
+                             Log.d("VALIDATION_SAVE_VIDEO","VALIDATION_SAVE_VIDEO_01");
                         }
                     } else {
                         // Node LikeId_1 không tồn tại hoặc không có dữ liệu
