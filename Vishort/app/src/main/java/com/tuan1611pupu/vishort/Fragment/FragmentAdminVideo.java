@@ -112,6 +112,7 @@ public class FragmentAdminVideo extends Fragment {
 
                 } else {
                     // loi
+                    Log.d("VALIDATION_ADMIN","VALIDATION_ADMIN_THONGKE1");
                 }
             }
 

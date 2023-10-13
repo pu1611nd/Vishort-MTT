@@ -199,6 +199,7 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
                     // Player đang tải nội dung
                     binding.buffering.setVisibility(View.VISIBLE);
                     player.setPlayWhenReady(false);
+                     Log.d("VALIDATION_VIDEO","VALIDATION_VIDEO_02");
                 } else {
                     // Player đã tải xong nội dung
                     binding.buffering.setVisibility(View.GONE);
@@ -305,6 +306,7 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
             // Nếu ExoPlayer đang phát, tạm dừng và lưu lại vị trí hiện tại
             player.setPlayWhenReady(false);
             binding.playing.setVisibility(View.VISIBLE);
+            Log.d("VALIDATION_TTVideo","VALIDATION_TTVideo_02");
         } else {
             // Nếu ExoPlayer đang tạm dừng, tiếp tục phát từ vị trí hiện tại
             binding.playing.setVisibility(View.GONE);
@@ -660,11 +662,13 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
                                 // Thực hiện các hành động khi người dùng đã like
                                 playerBinding.like.setLiked(true);
                                 isLike = true;
+                                 Log.d("VALIDATION_LIKE","VALIDATION_LIKE_01");
                             } else {
                                 // userIdToCheck có giá trị false trong danh sách like
                                 // Thực hiện các hành động khi người dùng đã unlike
                                 playerBinding.like.setLiked(false);
                                 isLike = false;
+                                 Log.d("VALIDATION_LIKE","VALIDATION_LIKE_01");
                             }
                         } else {
                             // userIdToCheck không tồn tại trong danh sách like hoặc có giá trị null
@@ -705,12 +709,14 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
                                 // Thực hiện các hành động khi người dùng đã unlike
                                 playerBinding.save.setLiked(false);
                                 isSave = false;
+                                 Log.d("VALIDATION_SAVE_VIDEO","VALIDATION_SAVE_VIDEO_01");
                             }
                         } else {
                             // userIdToCheck không tồn tại trong danh sách like hoặc có giá trị null
                             // Thực hiện các hành động khi không tìm thấy userId
                             playerBinding.save.setLiked(false);
                             isSave = false;
+                             Log.d("VALIDATION_SAVE_VIDEO","VALIDATION_SAVE_VIDEO_01");
                         }
                     } else {
                         // Node LikeId_1 không tồn tại hoặc không có dữ liệu

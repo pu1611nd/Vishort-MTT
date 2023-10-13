@@ -56,11 +56,6 @@ public class LoginWithPhoneActivity extends AppCompatActivity {
         database = FirebaseFirestore.getInstance();
         preferenceManager = new PreferenceManager(getApplicationContext());
 
-        binding.buttonverify.setOnClickListener(v->{
-            Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-            startActivity(intent);
-        });
-
         sendOTP();
 
     }
@@ -70,6 +65,7 @@ public class LoginWithPhoneActivity extends AppCompatActivity {
         binding.buttonGetOTP.setOnClickListener(v -> {
             if(binding.inputMobile.getText().toString().trim().isEmpty()){
                 Toast.makeText(getApplicationContext(), "Enter phone number", Toast.LENGTH_SHORT).show();
+                Log.d("Message_Phone","Message_Phone_erro");
                 return;
             }else {
                 binding.progressBar.setVisibility(View.VISIBLE);
@@ -211,6 +207,7 @@ public class LoginWithPhoneActivity extends AppCompatActivity {
                                 LogIn(user);
                             }else{
                                 Toast.makeText(getApplicationContext(), "code khong dung", Toast.LENGTH_SHORT).show();
+                                Log.d("Message_OTP","Message_OTP_Info");
                             }
                         });
 
@@ -233,6 +230,7 @@ public class LoginWithPhoneActivity extends AppCompatActivity {
                         public void onVerificationFailed(@NonNull FirebaseException e) {
 
                             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Log.d("Message_Resend","Message_Resend_Info");
                         }
 
                         @Override
