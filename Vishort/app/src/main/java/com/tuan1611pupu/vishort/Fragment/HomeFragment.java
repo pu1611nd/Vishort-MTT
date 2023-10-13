@@ -199,7 +199,7 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
                     // Player đang tải nội dung
                     binding.buffering.setVisibility(View.VISIBLE);
                     player.setPlayWhenReady(false);
-                     Log.d("VALIDATION_VIDEO","VALIDATION_VIDEO_02");
+                     Log.d("VALIDATION_VIDEO","VALIDATION_VIDEO");
                 } else {
                     // Player đã tải xong nội dung
                     binding.buffering.setVisibility(View.GONE);
@@ -225,7 +225,7 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
                         Reels reels = userSnapshot.getValue(Reels.class);
                         reelsList.add(reels);
                     }
-                    Log.d("listReel",reelsList.size()+"!");
+                     Log.d("SUCCESS"," Lay Thanh cong");
                     adapter.addData(reelsList);
                     binding.rvReels.setAdapter(adapter);
 
@@ -233,14 +233,14 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
                     // Tiếp tục xử lý dữ liệu theo nhu cầu của bạn
                 } else {
                     // Dữ liệu không tồn tại hoặc danh sách user rỗng
-                    Log.d("listReel",reelsList.size()+"!");
+                    Log.d("E001","That bai");
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Xử lý lỗi khi lấy dữ liệu bị hủy
-                Log.d("listReel",reelsList.size()+"!2");
+                Log.d("E001","That bai");
             }
         });
 
@@ -306,7 +306,7 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
             // Nếu ExoPlayer đang phát, tạm dừng và lưu lại vị trí hiện tại
             player.setPlayWhenReady(false);
             binding.playing.setVisibility(View.VISIBLE);
-            Log.d("VALIDATION_TTVideo","VALIDATION_TTVideo_02");
+            Log.d("VALIDATION_TTVideo","VALIDATION_TTVideo");
         } else {
             // Nếu ExoPlayer đang tạm dừng, tiếp tục phát từ vị trí hiện tại
             binding.playing.setVisibility(View.GONE);
