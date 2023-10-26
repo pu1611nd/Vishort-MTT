@@ -41,6 +41,7 @@ import com.tuan1611pupu.vishort.Model.User2;
 import com.tuan1611pupu.vishort.R;
 import com.tuan1611pupu.vishort.Utilities.Constants;
 import com.tuan1611pupu.vishort.Utilities.PreferenceManager;
+import com.tuan1611pupu.vishort.Utilities.Validation;
 import com.tuan1611pupu.vishort.databinding.ActivityLogInBinding;
 
 import java.io.IOException;
@@ -205,6 +206,7 @@ public class LogInActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<User2> call, Response<User2> response) {
                     if (response.isSuccessful()) {
+                        preferenceManager.showToast(getApplicationContext(), Validation.VALIDATION_INFO_ACCOUNT);
                         // sua lai de vao admin
                         User2 user2 = response.body();
                         if(user2.getRoleId() == 1){
@@ -254,6 +256,7 @@ public class LogInActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<User2> call, Throwable t) {
                     // Xử lý lỗi khi yêu cầu thất bại
+                    preferenceManager.showToast(getApplicationContext(), Validation.LOGIN_FAIL);
                 }
             });
 
@@ -282,6 +285,7 @@ public class LogInActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
                     preferenceManager.putString(Constants.KEY_USER_ID, user.getUid());
+                    preferenceManager.showToast(getApplicationContext(), Validation.LOGIN_SUCCESS);
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -292,7 +296,8 @@ public class LogInActivity extends AppCompatActivity {
                         String errorBody = response.errorBody().string();
                         String code = String.valueOf(response.code());
                         // Xử lý thông tin lỗi ở đây
-                        Toast.makeText(getApplicationContext(), "them user that bai", Toast.LENGTH_SHORT).show();
+                        preferenceManager.showToast(getApplicationContext(), Validation.LOGIN_FAIL);
+                        //Toast.makeText(getApplicationContext(), "them user that bai", Toast.LENGTH_SHORT).show();
                         Log.d("Akkkk",errorBody+code);
                     } catch (IOException e) {
 
@@ -305,6 +310,7 @@ public class LogInActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 // Xử lý lỗi khi yêu cầu thất bại
+                preferenceManager.showToast(getApplicationContext(), Validation.LOGIN_FAIL);
             }
         });
 
@@ -331,6 +337,7 @@ public class LogInActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
                     preferenceManager.putString(Constants.KEY_USER_ID, user.getUid());
+                    preferenceManager.showToast(getApplicationContext(), Validation.LOGIN_SUCCESS);
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -341,7 +348,8 @@ public class LogInActivity extends AppCompatActivity {
                         String errorBody = response.errorBody().string();
                         String code = String.valueOf(response.code());
                         // Xử lý thông tin lỗi ở đây
-                        Toast.makeText(getApplicationContext(), "them user that bai", Toast.LENGTH_SHORT).show();
+                        preferenceManager.showToast(getApplicationContext(), Validation.LOGIN_FAIL);
+                        //Toast.makeText(getApplicationContext(), "them user that bai", Toast.LENGTH_SHORT).show();
                         Log.d("Akkkk",errorBody+code);
                     } catch (IOException e) {
 
@@ -354,6 +362,7 @@ public class LogInActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 // Xử lý lỗi khi yêu cầu thất bại
+                preferenceManager.showToast(getApplicationContext(), Validation.LOGIN_FAIL);
             }
         });
 

@@ -25,6 +25,8 @@ import com.tuan1611pupu.vishort.Api.APIService;
 import com.tuan1611pupu.vishort.Api.DataService;
 import com.tuan1611pupu.vishort.Model.Song;
 import com.tuan1611pupu.vishort.R;
+import com.tuan1611pupu.vishort.Utilities.PreferenceManager;
+import com.tuan1611pupu.vishort.Utilities.Validation;
 import com.tuan1611pupu.vishort.databinding.ActivitySongBinding;
 import com.tuan1611pupu.vishort.workers.FileDownloadWorker;
 
@@ -88,10 +90,12 @@ public class SongActivity extends AppCompatActivity {
                             updatedSongDummies.add(s);
                         }
                     }
+                    PreferenceManager.showToast(getApplicationContext(), Validation.SONG_SUCCESS);
                     songsAdapter.addData(updatedSongDummies);
 
                 }else {
                     // loi
+                    PreferenceManager.showToast(getApplicationContext(), Validation.SONG_FAIL);
                 }
             }
 

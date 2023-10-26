@@ -6,7 +6,16 @@ public class Message {
     private String receiverId;
     private String content;
     private long timestamp;
+    private String conversationId;
 
+
+    public String getConversationId() {
+        return conversationId;
+    }
+
+    public void setConversationId(String conversationId) {
+        this.conversationId = conversationId;
+    }
 
     public String getChatId() {
         return chatId;

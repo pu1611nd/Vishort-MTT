@@ -32,6 +32,7 @@ import com.tuan1611pupu.vishort.Model.NotificationData;
 import com.tuan1611pupu.vishort.R;
 import com.tuan1611pupu.vishort.Utilities.Constants;
 import com.tuan1611pupu.vishort.Utilities.PreferenceManager;
+import com.tuan1611pupu.vishort.Utilities.Validation;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,8 +77,8 @@ public class Fragment_comment extends BottomSheetDialogFragment {
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            reelsId= bundle.getString("reelId"); // Lấy giá trị từ Bundle
-            reelsBy= bundle.getString("reelBy");
+            reelsId = bundle.getString("reelId"); // Lấy giá trị từ Bundle
+            reelsBy = bundle.getString("reelBy");
         }
         commentNull = view.findViewById(R.id.commentNull);
         imgExit = view.findViewById(R.id.imgExit);
@@ -86,65 +87,71 @@ public class Fragment_comment extends BottomSheetDialogFragment {
         layoutSend = view.findViewById(R.id.layoutSend);
         preferenceManager = new PreferenceManager(getContext());
         list = new ArrayList<>();
-        adapter = new CommentAdapter(list,getContext());
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        adapter = new CommentAdapter(list, getContext());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rcListComment.setLayoutManager(linearLayoutManager);
         rcListComment.setNestedScrollingEnabled(false);
         rcListComment.setAdapter(adapter);
 
-        imgExit.setOnClickListener(v->{
+        imgExit.setOnClickListener(v -> {
             dismiss();
         });
-        layoutSend.setOnClickListener(v->{
-            Comment comment = new Comment();
-            UUID uuid = UUID.randomUUID();
-            comment.setCommentId(uuid.toString());
-            comment.setReelId(reelsId);
-            comment.setCommentBody(inputComment.getText().toString().trim());
-            comment.setCommentedAt(new Date().getTime());
-            comment.setCommentedBy(preferenceManager.getString(Constants.KEY_USER_ID));
+        layoutSend.setOnClickListener(v -> {
+            if (inputComment.getText().toString().isEmpty()) {
+                preferenceManager.showToast(getContext(), Validation.VALIDATION_COMMENT_INFO);
+            } else {
 
-            DatabaseReference reelsRef = FirebaseDatabase.getInstance()
-                    .getReference("Reels")
-                    .child(reelsId);
+                Comment comment = new Comment();
+                UUID uuid = UUID.randomUUID();
+                comment.setCommentId(uuid.toString());
+                comment.setReelId(reelsId);
+                comment.setCommentBody(inputComment.getText().toString().trim());
+                comment.setCommentedAt(new Date().getTime());
+                comment.setCommentedBy(preferenceManager.getString(Constants.KEY_USER_ID));
 
-            DataService dataService = APIService.getService();
-            Call<Void> call = dataService.addComment(comment);
-            call.enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    if (response.isSuccessful()) {
-                        // Xử lý khi cập nhật thành công
-                        Map<String, Object> updates = new HashMap<>();
-                        commentCount ++;
-                        updates.put("comments",commentCount);
-                        reelsRef.updateChildren(updates)
-                                .addOnSuccessListener(aVoid1 -> {
-                                    // Xử lý khi cập nhật thành công số lượng like
-                                    inputComment.setText("");
-                                })
-                                .addOnFailureListener(e -> {
-                                    // Xử lý khi cập nhật số lượng like thất bại
-                                });
-                        addNotification(uuid.toString(),reelsBy);
+                DatabaseReference reelsRef = FirebaseDatabase.getInstance()
+                        .getReference("Reels")
+                        .child(reelsId);
 
-                    } else {
-                        // Xử lý lỗi khi yêu cầu thất bại
+                DataService dataService = APIService.getService();
+                Call<Void> call = dataService.addComment(comment);
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            // Xử lý khi cập nhật thành công
+                            Map<String, Object> updates = new HashMap<>();
+                            commentCount++;
+                            updates.put("comments", commentCount);
+                            reelsRef.updateChildren(updates)
+                                    .addOnSuccessListener(aVoid1 -> {
+                                        // Xử lý khi cập nhật thành công số lượng like
+                                        inputComment.setText("");
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        // Xử lý khi cập nhật số lượng like thất bại
+                                    });
+                            addNotification(uuid.toString(), reelsBy);
 
+                        } else {
+                            // Xử lý lỗi khi yêu cầu thất bại
+
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    // Xử lý lỗi khi yêu cầu thất bại
-                }
-            });
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        // Xử lý lỗi khi yêu cầu thất bại
+                    }
+                });
 
+            }
         });
 
         getComment();
 
         return view;
+
     }
 
     private void getComment() {
@@ -166,13 +173,12 @@ public class Fragment_comment extends BottomSheetDialogFragment {
                     list.clear();
                     list.addAll(comments);
                     commentCount = list.size();
-                    if(commentCount != 0){
+                    if (commentCount != 0) {
                         commentNull.setVisibility(View.GONE);
                     }
 
                     // Báo cho adapter biết rằng dữ liệu đã thay đổi
                     adapter.notifyDataSetChanged();
-
 
 
                 } else {
@@ -189,7 +195,7 @@ public class Fragment_comment extends BottomSheetDialogFragment {
 
     }
 
-    private void addNotification(String commentId,String userId) {
+    private void addNotification(String commentId, String userId) {
         NotificationData notificationData = new NotificationData();
         UUID uuid = UUID.randomUUID();
         notificationData.setNotificationId(uuid.toString());

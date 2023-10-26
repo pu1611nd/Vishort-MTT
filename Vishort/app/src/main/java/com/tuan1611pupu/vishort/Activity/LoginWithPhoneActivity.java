@@ -27,6 +27,7 @@ import com.tuan1611pupu.vishort.Model.User;
 import com.tuan1611pupu.vishort.R;
 import com.tuan1611pupu.vishort.Utilities.Constants;
 import com.tuan1611pupu.vishort.Utilities.PreferenceManager;
+import com.tuan1611pupu.vishort.Utilities.Validation;
 import com.tuan1611pupu.vishort.databinding.ActivityLoginWithPhoneBinding;
 
 import java.io.IOException;
@@ -63,9 +64,8 @@ public class LoginWithPhoneActivity extends AppCompatActivity {
 
     private void sendOTP(){
         binding.buttonGetOTP.setOnClickListener(v -> {
-            if(binding.inputMobile.getText().toString().trim().isEmpty()){
-                Toast.makeText(getApplicationContext(), "Enter phone number", Toast.LENGTH_SHORT).show();
-                Log.d("Message_Phone","Message_Phone_erro");
+            if(binding.inputMobile.getText().toString().trim().isEmpty()||binding.inputMobile.getText().length() < 9||binding.inputMobile.getText().length() > 9){
+                preferenceManager.showToast(getApplicationContext(), Validation.VALIDATION_PHONE_FORMAT);
                 return;
             }else {
                 binding.progressBar.setVisibility(View.VISIBLE);
@@ -114,6 +114,7 @@ public class LoginWithPhoneActivity extends AppCompatActivity {
                     if(task.isSuccessful() && task.getResult() != null && task.getResult().getDocuments().size() > 0){
                         preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN,true);
                         preferenceManager.putString(Constants.KEY_USER_ID,user.getUid());
+                        preferenceManager.showToast(getApplicationContext(), Validation.LOGIN_SUCCESS);
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
@@ -141,6 +142,7 @@ public class LoginWithPhoneActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
                     preferenceManager.putString(Constants.KEY_USER_ID, user.getUid());
+                    preferenceManager.showToast(getApplicationContext(), Validation.LOGIN_SUCCESS);
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -151,8 +153,7 @@ public class LoginWithPhoneActivity extends AppCompatActivity {
                         String errorBody = response.errorBody().string();
                         String code = String.valueOf(response.code());
                         // Xử lý thông tin lỗi ở đây
-                        Toast.makeText(getApplicationContext(), "them user that bai", Toast.LENGTH_SHORT).show();
-                        Log.d("Akkkk",errorBody+code);
+                        preferenceManager.showToast(getApplicationContext(), Validation.LOGIN_FAIL);
                     } catch (IOException e) {
 
                         e.printStackTrace();
@@ -164,6 +165,7 @@ public class LoginWithPhoneActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 // Xử lý lỗi khi yêu cầu thất bại
+                preferenceManager.showToast(getApplicationContext(), Validation.LOGIN_PHONE_FAIL);
             }
         });
     }
@@ -181,7 +183,7 @@ public class LoginWithPhoneActivity extends AppCompatActivity {
                     binding.inputCode4.getText().toString().trim().isEmpty() ||
                     binding.inputCode5.getText().toString().trim().isEmpty() ||
                     binding.inputCode6.getText().toString().trim().isEmpty() ){
-                Toast.makeText(getApplicationContext(), "nhap du code", Toast.LENGTH_SHORT).show();
+                preferenceManager.showToast(getApplicationContext(), Validation.VALIDATION_OTP_FORMAT);
                 return;
             }
             String code = binding.inputCode1.getText().toString() +
@@ -206,8 +208,7 @@ public class LoginWithPhoneActivity extends AppCompatActivity {
                                 // kiem tra xem co dang ky chua neu chua thi hien man hinh dang ky
                                 LogIn(user);
                             }else{
-                                Toast.makeText(getApplicationContext(), "code khong dung", Toast.LENGTH_SHORT).show();
-                                Log.d("Message_OTP","Message_OTP_Info");
+                                preferenceManager.showToast(getApplicationContext(), Validation.VALIDATION_OTP_FAIL);
                             }
                         });
 
@@ -230,13 +231,12 @@ public class LoginWithPhoneActivity extends AppCompatActivity {
                         public void onVerificationFailed(@NonNull FirebaseException e) {
 
                             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                            Log.d("Message_Resend","Message_Resend_Info");
                         }
 
                         @Override
                         public void onCodeSent(@NonNull String newVerificationId, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                             verificationId1 = newVerificationId;
-                            Toast.makeText(getApplicationContext(), "OTP sent", Toast.LENGTH_SHORT).show();
+                            preferenceManager.showToast(getApplicationContext(), Validation.OTP_SEND);
                         }
                     }
 

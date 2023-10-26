@@ -1,16 +1,11 @@
 package com.tuan1611pupu.vishort.Activity;
 
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
-import android.annotation.SuppressLint;
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -18,14 +13,12 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.arthenica.mobileffmpeg.FFmpeg;
@@ -39,12 +32,9 @@ import com.otaliastudios.cameraview.controls.Mode;
 import com.otaliastudios.cameraview.controls.VideoCodec;
 import com.otaliastudios.cameraview.filter.Filters;
 import com.tuan1611pupu.vishort.Adapter.FilterRecordAdapter;
-import com.tuan1611pupu.vishort.Model.Song;
 import com.tuan1611pupu.vishort.databinding.ActivityRecorderBinding;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -75,6 +65,12 @@ public class RecorderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityRecorderBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // Kiểm tra xem quyền đã được cấp hay chưa
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // Nếu quyền chưa được cấp, yêu cầu quyền
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, SELECT_VIDEO);
+        }
 
         Intent intent1 = getIntent();
         linkAudio = intent1.getStringExtra("linkAudio");

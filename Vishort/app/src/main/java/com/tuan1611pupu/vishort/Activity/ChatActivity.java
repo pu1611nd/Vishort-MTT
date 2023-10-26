@@ -77,7 +77,8 @@ public class ChatActivity extends AppCompatActivity {
         loadReceiverDetails();
         init();
         getUser();
-        listenMessages1();
+        checkForConversion();
+        listenMessages();
         setListeners();
 
     }
@@ -114,12 +115,32 @@ public class ChatActivity extends AppCompatActivity {
         });
 
     }
+    private void checkBox(){
+        if(conversionId != null){
+            updateConversion(binding.inputMessage.getText().toString());
+            sendMessage(conversionId);
+        }else {
+            Conversation conversation = new Conversation();
+            UUID uuid1 = UUID.randomUUID();
+            conversation.setConversationID(uuid1.toString());
+            conversation.setSenderId(preferenceManager.getString(Constants.KEY_USER_ID));
+            conversation.setSenderName(myUser.getUsername());
+            conversation.setSenderImage(myUser.getImage());
+            conversation.setReceiverId(receiverUser.getId());
+            conversation.setReceiverName(receiverUser.getUsername());
+            conversation.setReceiverImage(receiverUser.getImage());
+            conversation.setLastMessage(binding.inputMessage.getText().toString());
+            conversation.setTimestamp(new Date().getTime());
+            addConversion(conversation);
+        }
+    }
 
-    private void sendMessage(){
+    private void sendMessage(String conversionId){
         Message message = new Message();
         UUID uuid = UUID.randomUUID();
         message.setChatId(uuid.toString());
         message.setSenderId(preferenceManager.getString(Constants.KEY_USER_ID));
+        message.setConversationId(conversionId);
         message.setReceiverId(receiverUser.getId());
         message.setContent(binding.inputMessage.getText().toString());
         message.setTimestamp(new Date().getTime());
@@ -142,130 +163,65 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        if(conversionId != null){
-            updateConversion(binding.inputMessage.getText().toString());
-        }else {
-            Conversation conversation = new Conversation();
-            UUID uuid1 = UUID.randomUUID();
-            conversation.setConversationID(uuid1.toString());
-            conversation.setSenderId(preferenceManager.getString(Constants.KEY_USER_ID));
-            conversation.setSenderName(myUser.getUsername());
-            conversation.setSenderImage(myUser.getImage());
-            conversation.setReceiverId(receiverUser.getId());
-            conversation.setReceiverName(receiverUser.getUsername());
-            conversation.setReceiverImage(receiverUser.getImage());
-            conversation.setLastMessage(binding.inputMessage.getText().toString());
-            conversation.setTimestamp(new Date().getTime());
-            addConversion(conversation);
-        }
         binding.inputMessage.setText(null);
     }
 
     private void listenMessages() {
-        DatabaseReference databaseReference = database.getReference(Constants.KEY_COLLECTION_CHAT);
-        // Sử dụng phương thức addListenerForSingleValueEvent để lấy dữ liệu một lần duy nhất
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    int count = chatMessages.size();
-                    chatMessages.clear();
-                    for (DataSnapshot chatSnapshot : dataSnapshot.getChildren()) {
-                        ChatMessage chatMessage = new ChatMessage();
-                        chatMessage.setSenderId(chatSnapshot.child(Constants.KEY_SENDER_ID).getValue(String.class));
-                        chatMessage.setReceiverId(chatSnapshot.child(Constants.KEY_RECEIVER_ID).getValue(String.class));
-                        chatMessage.setMessage(chatSnapshot.child(Constants.KEY_MESSAGE).getValue(String.class));
-                        chatMessage.setDateTime(getReadableDateTime(new Date(chatSnapshot.child(Constants.KEY_TIMESTAMP).getValue(long.class))));
-                        chatMessage.setDateObject(new Date(chatSnapshot.child(Constants.KEY_TIMESTAMP).getValue(long.class)));
-                        if (preferenceManager.getString(Constants.KEY_USER_ID).equals(chatMessage.getSenderId())
-                                && receiverUser.getId().equals(chatMessage.getReceiverId()) || preferenceManager.getString(Constants.KEY_USER_ID).equals(chatMessage.getReceiverId())
-                                && receiverUser.getId().equals(chatMessage.getSenderId()) ) {
-                            chatMessages.add(chatMessage);
+        if(conversionId != null) {
+            DatabaseReference databaseReference = database.getReference(Constants.KEY_COLLECTION_CHAT).child(conversionId);
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        int count = chatMessages.size();
+                        chatMessages.clear();
+                        List<ChatMessage> newMessages = new ArrayList<>();
+
+                        for (DataSnapshot chatSnapshot : dataSnapshot.getChildren()) {
+                            ChatMessage chatMessage = new ChatMessage();
+                            chatMessage.setSenderId(chatSnapshot.child(Constants.KEY_SENDER_ID).getValue(String.class));
+                            chatMessage.setReceiverId(chatSnapshot.child(Constants.KEY_RECEIVER_ID).getValue(String.class));
+                            chatMessage.setMessage(chatSnapshot.child(Constants.KEY_MESSAGE).getValue(String.class));
+                            chatMessage.setDateTime(getReadableDateTime(new Date(chatSnapshot.child(Constants.KEY_TIMESTAMP).getValue(long.class))));
+                            chatMessage.setDateObject(new Date(chatSnapshot.child(Constants.KEY_TIMESTAMP).getValue(long.class)));
+                            if (chatMessage == null) {
+                                continue;
+                            }
+
+                            String senderId = chatMessage.getSenderId();
+                            String receiverId = chatMessage.getReceiverId();
+                            String currentUserId = preferenceManager.getString(Constants.KEY_USER_ID);
+                            if ((currentUserId.equals(senderId) && receiverUser.getId().equals(receiverId)) ||
+                                    (currentUserId.equals(receiverId) && receiverUser.getId().equals(senderId))) {
+                                newMessages.add(chatMessage);
+                            }
                         }
+
+                        chatMessages.addAll(newMessages);
                         Collections.sort(chatMessages, (obj1, obj2) -> obj1.getDateObject().compareTo(obj2.getDateObject()));
                         if (count == 0) {
                             chatAdapter.notifyDataSetChanged();
                         } else {
-                            chatAdapter.notifyItemRangeInserted(chatMessages.size(), chatMessages.size());
-                            //tim sau lai nha
-                            binding.chatRecyclerView.smoothScrollToPosition(chatMessages.size() - 1);
+                            chatAdapter.notifyDataSetChanged();
+                            int lastVisibleItemPosition = chatMessages.size() - 1;
+                            binding.chatRecyclerView.smoothScrollToPosition(Math.min(lastVisibleItemPosition, chatMessages.size() - 1));
                         }
                         binding.chatRecyclerView.setVisibility(View.VISIBLE);
-                    }
-                    binding.progressBar.setVisibility(View.GONE);
-                    if(conversionId == null){
-                        checkForConversion();
-                    }
+                        binding.progressBar.setVisibility(View.GONE);
 
-
-                } else {
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-    }
-
-    private void listenMessages1() {
-        DatabaseReference databaseReference = database.getReference(Constants.KEY_COLLECTION_CHAT);
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    int count = chatMessages.size();
-                    chatMessages.clear();
-                    List<ChatMessage> newMessages = new ArrayList<>();
-
-                    for (DataSnapshot chatSnapshot : dataSnapshot.getChildren()) {
-                        ChatMessage chatMessage = new ChatMessage();
-                        chatMessage.setSenderId(chatSnapshot.child(Constants.KEY_SENDER_ID).getValue(String.class));
-                        chatMessage.setReceiverId(chatSnapshot.child(Constants.KEY_RECEIVER_ID).getValue(String.class));
-                        chatMessage.setMessage(chatSnapshot.child(Constants.KEY_MESSAGE).getValue(String.class));
-                        chatMessage.setDateTime(getReadableDateTime(new Date(chatSnapshot.child(Constants.KEY_TIMESTAMP).getValue(long.class))));
-                        chatMessage.setDateObject(new Date(chatSnapshot.child(Constants.KEY_TIMESTAMP).getValue(long.class)));
-                        if (chatMessage == null) {
-                            continue;
-                        }
-
-                        String senderId = chatMessage.getSenderId();
-                        String receiverId = chatMessage.getReceiverId();
-                        String currentUserId = preferenceManager.getString(Constants.KEY_USER_ID);
-                        if ((currentUserId.equals(senderId) && receiverUser.getId().equals(receiverId)) ||
-                                (currentUserId.equals(receiverId) && receiverUser.getId().equals(senderId))) {
-                            newMessages.add(chatMessage);
-                        }
-                    }
-
-                    chatMessages.addAll(newMessages);
-                    Collections.sort(chatMessages, (obj1, obj2) -> obj1.getDateObject().compareTo(obj2.getDateObject()));
-                    if(count == 0){
-                        chatAdapter.notifyDataSetChanged();
-                    }else {
-                        chatAdapter.notifyDataSetChanged();
-                        int lastVisibleItemPosition = chatMessages.size() - 1;
-                        binding.chatRecyclerView.smoothScrollToPosition(Math.min(lastVisibleItemPosition, chatMessages.size() - 1));
-                    }
-                    binding.chatRecyclerView.setVisibility(View.VISIBLE);
-                    binding.progressBar.setVisibility(View.GONE);
-
-
-                    if (conversionId == null) {
-                        checkForConversion();
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle onCancelled if needed
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Handle onCancelled if needed
+                }
+            });
+        }
+        else {
+            Log.d("loi","loi 1234");
+            binding.progressBar.setVisibility(View.GONE);
+        }
     }
 
 
@@ -277,7 +233,7 @@ public class ChatActivity extends AppCompatActivity {
     }
     private void setListeners(){
         binding.imageBack.setOnClickListener(v -> onBackPressed());
-        binding.layoutSend.setOnClickListener(v -> sendMessage());
+        binding.layoutSend.setOnClickListener(v -> checkBox());
     }
 
     private void addConversion(Conversation conversation){
@@ -288,6 +244,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     Log.d("conver","da gui thanh cong");
+                    sendMessage(conversation.getConversationID());
                 } else {
                     // Xử lý lỗi khi yêu cầu thất bại
                 }
@@ -332,7 +289,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void checkForConversion(){
-        if(chatMessages.size() != 0){
             checkForConversionRemotely(
                     preferenceManager.getString(Constants.KEY_USER_ID),
                     receiverUser.getId()
@@ -341,13 +297,12 @@ public class ChatActivity extends AppCompatActivity {
                     receiverUser.getId(),
                     preferenceManager.getString(Constants.KEY_USER_ID)
             );
-        }
     }
 
     private void checkForConversionRemotely(String senderId, String receiverId) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Conversations");
 
-        reference.orderByChild("senderId").equalTo(senderId).addListenerForSingleValueEvent(new ValueEventListener() {
+        reference.orderByChild("senderId").equalTo(senderId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -358,6 +313,7 @@ public class ChatActivity extends AppCompatActivity {
                         conversionId = snapshot.child("conversationId").getValue(String.class);
                         // Đây là cuộc trò chuyện bạn đang tìm kiếm (senderId và receiverId khớp)
                         // Tiếp tục xử lý dữ liệu ở đây...
+                        listenMessages();
                     }
                 }
             }

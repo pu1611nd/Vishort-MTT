@@ -2,6 +2,9 @@ package com.tuan1611pupu.vishort.Utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.widget.Toast;
+
+import retrofit2.Callback;
 
 public class PreferenceManager {
     private SharedPreferences sharedPreferences;
@@ -31,6 +34,10 @@ public class PreferenceManager {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.apply();
+    }
+
+    public static void showToast(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
 

@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,17 +36,20 @@ import com.tuan1611pupu.vishort.Model.Reels;
 import com.tuan1611pupu.vishort.Model.User;
 import com.tuan1611pupu.vishort.Utilities.Constants;
 import com.tuan1611pupu.vishort.Utilities.PreferenceManager;
+import com.tuan1611pupu.vishort.Utilities.Validation;
 import com.tuan1611pupu.vishort.databinding.ActivityUploadVideoBinding;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.InvalidObjectException;
 import java.net.SocketException;
 import java.util.Date;
@@ -70,14 +74,14 @@ public class UploadVideoActivity extends AppCompatActivity {
         binding = ActivityUploadVideoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         Intent intent = getIntent();
-        Uri videoUri  = intent.getParcelableExtra("uriVideo");
+        Uri videoUri = intent.getParcelableExtra("uriVideo");
         String SongId = intent.getStringExtra("SongId");
-        binding.back.setOnClickListener(v->{
+        binding.back.setOnClickListener(v -> {
             onBackPressed();
         });
 
         UUID uuid = UUID.randomUUID();
-        File thumbnailFile = new File(getCacheDir(), uuid+"image.png");
+        File thumbnailFile = new File(getCacheDir(), uuid + "image.png");
         String thumbnailPath = thumbnailFile.getAbsolutePath();
         String[] cmd = {"-i", videoUri.toString(), "-ss", "00:00:01", "-frames:v", "1", thumbnailPath};
         FFmpeg.executeAsync(cmd, new ExecuteCallback() {
@@ -112,9 +116,9 @@ public class UploadVideoActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 String description = binding.textPost.getText().toString().trim();
-                if(!description.isEmpty()){
+                if (!description.isEmpty()) {
                     binding.post.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     binding.post.setVisibility(View.GONE);
                 }
 
@@ -127,18 +131,34 @@ public class UploadVideoActivity extends AppCompatActivity {
         });
 
 
-        binding.post.setOnClickListener(v->{
-            FirebaseAuth mAuth = FirebaseAuth.getInstance();
-            FirebaseUser currentUser = mAuth.getCurrentUser();
-            if (currentUser != null) {
-                dialog.show();
-                postVideo(videoUri,SongId);
-            }else {
-                Intent intent1 = new Intent(getApplicationContext(), LogInActivity.class);
-                intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent1);
-            }
+        binding.post.setOnClickListener(v -> {
+            // Sử dụng MediaMetadataRetriever để lấy thông tin về video
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            retriever.setDataSource(this, videoUri);
 
+            // Lấy thời lượng video (đơn vị: milliseconds)
+            String duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            long durationMillis = Long.parseLong(duration);
+
+            // Chuyển đổi thời lượng thành giây
+            float totalSeconds = durationMillis / 1000.0f;
+
+            // Kiểm tra nếu thời gian video lớn hơn 90 giây
+            if (totalSeconds > 90) {
+                PreferenceManager.showToast(getApplicationContext(), Validation.VALIDATION_VIDEO_TIME);
+                // Thêm mã để hiển thị thông báo ở đây
+            } else {
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                FirebaseUser currentUser = mAuth.getCurrentUser();
+                if (currentUser != null) {
+                    dialog.show();
+                    postVideo(videoUri, SongId);
+                } else {
+                    Intent intent1 = new Intent(getApplicationContext(), LogInActivity.class);
+                    intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent1);
+                }
+            }
         });
 
     }
@@ -150,13 +170,10 @@ public class UploadVideoActivity extends AppCompatActivity {
     }
 
 
-
-
-
-    private void postVideo(Uri uri,String SongId){
+    private void postVideo(Uri uri, String SongId) {
         final StorageReference reference = storage.getReference().child("videos")
                 .child(preferenceManager.getString(Constants.KEY_USER_ID))
-                .child(new Date().getTime()+"");
+                .child(new Date().getTime() + "");
         reference.putFile(uri).addOnSuccessListener(taskSnapshot -> reference.getDownloadUrl().addOnSuccessListener(uri1 -> {
             Reels reel = new Reels();
             reel.setVideo(uri1.toString());
@@ -167,7 +184,7 @@ public class UploadVideoActivity extends AppCompatActivity {
             reel.setReelsBy(preferenceManager.getString(Constants.KEY_USER_ID));
             reel.setReelsAt(new Date().getTime());
             reel.setSongId(SongId);
-            Log.d("songId",reel.getSongId()+" ");
+            Log.d("songId", reel.getSongId() + " ");
             UUID uuid = UUID.randomUUID();
             reel.setReelsId(uuid.toString());
 
@@ -179,32 +196,23 @@ public class UploadVideoActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         // Xử lý khi cập nhật thành công
                         dialog.dismiss();
-                        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                        PreferenceManager.showToast(getApplicationContext(),Validation.POST_VIDEO_SUCCESS);
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
                     } else {
                         // Xử lý lỗi khi yêu cầu thất bại
-                        try {
-                            String errorBody = response.errorBody().string();
-                            String code = String.valueOf(response.code());
-                            // Xử lý thông tin lỗi ở đây
-                            Toast.makeText(getApplicationContext(), "them user that bai", Toast.LENGTH_SHORT).show();
-                            Log.d("Akkkk",errorBody+code);
-                        } catch (IOException e) {
-
-                            e.printStackTrace();
-
-                        }
+                        PreferenceManager.showToast(getApplicationContext(),Validation.POST_VIDEO_FAIL);
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Void> call, Throwable t) {
                     // Xử lý lỗi khi yêu cầu thất bại
+                    PreferenceManager.showToast(getApplicationContext(),Validation.POST_VIDEO_FAIL);
                 }
             });
-
 
 
         }));

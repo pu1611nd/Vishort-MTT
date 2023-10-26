@@ -47,6 +47,7 @@ import com.tuan1611pupu.vishort.Model.Save;
 import com.tuan1611pupu.vishort.R;
 import com.tuan1611pupu.vishort.Utilities.Constants;
 import com.tuan1611pupu.vishort.Utilities.PreferenceManager;
+import com.tuan1611pupu.vishort.Utilities.Validation;
 import com.tuan1611pupu.vishort.databinding.FragmentHomeBinding;
 import com.tuan1611pupu.vishort.databinding.ItemReelsBinding;
 
@@ -199,7 +200,7 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
                     // Player đang tải nội dung
                     binding.buffering.setVisibility(View.VISIBLE);
                     player.setPlayWhenReady(false);
-                     Log.d("VALIDATION_VIDEO","VALIDATION_VIDEO");
+                    preferenceManager.showToast(getContext(), Validation.VALIDATION_VIDEO);
                 } else {
                     // Player đã tải xong nội dung
                     binding.buffering.setVisibility(View.GONE);
@@ -220,12 +221,12 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    for (DataSnapshot videoSnapshot : dataSnapshot.getChildren()) {
                         // Đọc dữ liệu của từng user từ DataSnapshot và chuyển đổi thành đối tượng User
-                        Reels reels = userSnapshot.getValue(Reels.class);
+                        Reels reels = videoSnapshot.getValue(Reels.class);
                         reelsList.add(reels);
                     }
-                     Log.d("SUCCESS"," Lay Thanh cong");
+                    preferenceManager.showToast(getContext(), Validation.VIDEO_SUCCESS);
                     adapter.addData(reelsList);
                     binding.rvReels.setAdapter(adapter);
 
@@ -233,14 +234,14 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
                     // Tiếp tục xử lý dữ liệu theo nhu cầu của bạn
                 } else {
                     // Dữ liệu không tồn tại hoặc danh sách user rỗng
-                    Log.d("E001","That bai");
+                    preferenceManager.showToast(getContext(), Validation.VIDEO_FAIL);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Xử lý lỗi khi lấy dữ liệu bị hủy
-                Log.d("E001","That bai");
+                preferenceManager.showToast(getContext(), Validation.VIDEO_FAIL);
             }
         });
 
@@ -306,7 +307,7 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
             // Nếu ExoPlayer đang phát, tạm dừng và lưu lại vị trí hiện tại
             player.setPlayWhenReady(false);
             binding.playing.setVisibility(View.VISIBLE);
-            Log.d("VALIDATION_TTVideo","VALIDATION_TTVideo");
+            preferenceManager.showToast(getContext(), Validation.VALIDATION_TT_VIDEO);
         } else {
             // Nếu ExoPlayer đang tạm dừng, tiếp tục phát từ vị trí hiện tại
             binding.playing.setVisibility(View.GONE);
@@ -634,7 +635,7 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
 
                     }
                 } else {
-                    // Xử lý trường hợp không tìm thấy tài liệu được yêu cầ
+                    // Xử lý trường hợp không tìm thấy tài liệu được yêu cầu
                 }
             }
 
@@ -643,6 +644,7 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
                 // Xử lý lỗi khi lấy dữ liệu bị hủy
             }
         });
+
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
@@ -658,17 +660,16 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
                         if (isLiked != null) {
                             liked = true;
                             if (isLiked) {
+                                preferenceManager.showToast(getContext(), Validation.VALIDATION_LIKE);
                                 // userIdToCheck có giá trị true trong danh sách like
                                 // Thực hiện các hành động khi người dùng đã like
                                 playerBinding.like.setLiked(true);
                                 isLike = true;
-                                 Log.d("VALIDATION_LIKE","VALIDATION_LIKE_01");
                             } else {
                                 // userIdToCheck có giá trị false trong danh sách like
                                 // Thực hiện các hành động khi người dùng đã unlike
                                 playerBinding.like.setLiked(false);
                                 isLike = false;
-                                 Log.d("VALIDATION_LIKE","VALIDATION_LIKE_01");
                             }
                         } else {
                             // userIdToCheck không tồn tại trong danh sách like hoặc có giá trị null
@@ -700,6 +701,7 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
                         Boolean isSaved = dataSnapshot.child(preferenceManager.getString(Constants.KEY_USER_ID)).getValue(Boolean.class);
                         if (isSaved != null) {
                             if (isSaved) {
+                                preferenceManager.showToast(getContext(), Validation.VALIDATION_SAVE_VIDEO);
                                 // userIdToCheck có giá trị true trong danh sách like
                                 // Thực hiện các hành động khi người dùng đã like
                                 playerBinding.save.setLiked(true);
@@ -709,14 +711,12 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
                                 // Thực hiện các hành động khi người dùng đã unlike
                                 playerBinding.save.setLiked(false);
                                 isSave = false;
-                                 Log.d("VALIDATION_SAVE_VIDEO","VALIDATION_SAVE_VIDEO_01");
                             }
                         } else {
                             // userIdToCheck không tồn tại trong danh sách like hoặc có giá trị null
                             // Thực hiện các hành động khi không tìm thấy userId
                             playerBinding.save.setLiked(false);
                             isSave = false;
-                             Log.d("VALIDATION_SAVE_VIDEO","VALIDATION_SAVE_VIDEO_01");
                         }
                     } else {
                         // Node LikeId_1 không tồn tại hoặc không có dữ liệu

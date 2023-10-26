@@ -22,6 +22,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.tuan1611pupu.vishort.Utilities.Constants;
 import com.tuan1611pupu.vishort.Utilities.PreferenceManager;
+import com.tuan1611pupu.vishort.Utilities.Validation;
 import com.tuan1611pupu.vishort.databinding.ActivitySettingBinding;
 
 import java.util.HashMap;
@@ -71,10 +72,11 @@ public class SettingActivity extends AppCompatActivity {
 
                             LoginManager.getInstance().logOut();
                             preferenceManager.clear();
+                            PreferenceManager.showToast(getApplicationContext(), Validation.LOGOUT_SUCCESS);
                             startActivity(new Intent(getApplicationContext(), LogInActivity.class));
                             finish();
                         })
-                        .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "loi dang xuat", Toast.LENGTH_SHORT).show());
+                        .addOnFailureListener(e -> PreferenceManager.showToast(getApplicationContext(), Validation.LOGOUT_FAIL));
             }
         });
     }

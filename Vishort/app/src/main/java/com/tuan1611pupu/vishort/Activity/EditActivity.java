@@ -32,6 +32,8 @@ import com.tuan1611pupu.vishort.Api.APIService;
 import com.tuan1611pupu.vishort.Api.DataService;
 import com.tuan1611pupu.vishort.Model.User;
 import com.tuan1611pupu.vishort.Utilities.Constants;
+import com.tuan1611pupu.vishort.Utilities.PreferenceManager;
+import com.tuan1611pupu.vishort.Utilities.Validation;
 import com.tuan1611pupu.vishort.databinding.ActivityEditBinding;
 
 import java.io.IOException;
@@ -176,8 +178,7 @@ public class EditActivity extends AppCompatActivity {
                         String errorBody = response.errorBody().string();
                         String code = String.valueOf(response.code());
                         // Xử lý thông tin lỗi ở đây
-                        Toast.makeText(getApplicationContext(), "them user that bai", Toast.LENGTH_SHORT).show();
-                        Log.d("Akkkk",errorBody+code);
+                        PreferenceManager.showToast(getApplicationContext(), Validation.SAVE_INFO_FAIL);
                     } catch (IOException e) {
 
                         e.printStackTrace();
@@ -277,7 +278,7 @@ public class EditActivity extends AppCompatActivity {
 
     private void requestPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Write External Storage permission allows us to save files. Please allow this permission in App Settings.", Toast.LENGTH_LONG).show();
+            PreferenceManager.showToast(getApplicationContext(),Validation.PERMISSION_APP_SETTING);
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
         }
