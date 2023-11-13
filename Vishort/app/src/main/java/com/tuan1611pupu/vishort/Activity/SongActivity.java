@@ -92,6 +92,10 @@ public class SongActivity extends AppCompatActivity {
                     }
                     PreferenceManager.showToast(getApplicationContext(), Validation.SONG_SUCCESS);
                     songsAdapter.addData(updatedSongDummies);
+                    if(updatedSongDummies.size() == 0){
+                        binding.rvSongs.setVisibility(View.GONE);
+                        binding.textList.setVisibility(View.VISIBLE);
+                    }
 
                 }else {
                     // loi

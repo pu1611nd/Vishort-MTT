@@ -38,7 +38,7 @@ public class StorageUtil {
         sDataDir = BaseUtils.getContext().getFilesDir().getAbsolutePath();
       }
       File file = new File(sDataDir);
-      if (!file.exists()) {//判断文件目录是否存在
+      if (!file.exists()) {
         file.mkdirs();
       }
     }
@@ -93,7 +93,6 @@ public class StorageUtil {
     return new File(cacheDirPath);
   }
 
-  // 功能描述:删除文件夹下所有文件和文件夹
   public static boolean delFiles(String path) {
     File cacheFile = new File(path);
     if (!cacheFile.exists()) {
@@ -101,13 +100,10 @@ public class StorageUtil {
     }
     File[] files = cacheFile.listFiles();
     for (int i = 0; i < files.length; i++) {
-      // 是文件则直接删除
       if (files[i].exists() && files[i].isFile()) {
         files[i].delete();
       } else if (files[i].exists() && files[i].isDirectory()) {
-        // 递归删除文件
         delFiles(files[i].getAbsolutePath());
-        // 删除完目录下面的所有文件后再删除该文件夹
         files[i].delete();
       }
     }
@@ -133,10 +129,6 @@ public class StorageUtil {
     return 0;
   }
 
-  /**
-   * @param length 长度 byte为单位
-   * 将文件大小转换为KB,MB格式
-   */
   public static String getFileSize(long length) {
     int MB = 1024 * 1024;
     if (length < MB) {
@@ -153,18 +145,13 @@ public class StorageUtil {
     return file.exists();
   }
 
-  /**
-   * @param path 路径
-   * @return 是否删除成功
-   */
+
   public static boolean deleteFile(String path) {
     if (TextUtils.isEmpty(path)) return true;
     return deleteFile(new File(path));
   }
 
-  /**
-   * @return 是否删除成功
-   */
+
   public static boolean deleteFile(File file) {
     if (file == null || !file.exists()) return true;
 

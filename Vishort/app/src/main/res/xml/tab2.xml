@@ -4,6 +4,11 @@
         drawable="@drawable/ic_video"
         text="@string/video" />
     <tab
+        drawable="@drawable/ic_baseline_stacked_bar_chart_24"
+        text="@string/Statistical"
+        />
+    <tab
         drawable="@drawable/ic_baseline_account_circle_24"
         text="@string/user" />
+
 </tab2>

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -363,6 +364,7 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
 
                         } else {
                             // Xử lý lỗi khi yêu cầu thất bại
+                            PreferenceManager.showToast(getContext(),Validation.ERR0_EX);
 
                         }
                     }
@@ -370,6 +372,7 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
                         // Xử lý lỗi khi yêu cầu thất bại
+                        PreferenceManager.showToast(getContext(),Validation.ERR0_EX);
                     }
                 });
 
@@ -403,6 +406,7 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
 
                             } else {
                                 // Xử lý lỗi khi yêu cầu thất bại
+                                PreferenceManager.showToast(getContext(),Validation.ERR0_EX);
 
                             }
                         }
@@ -410,6 +414,7 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
                         @Override
                         public void onFailure(Call<Void> call, Throwable t) {
                             // Xử lý lỗi khi yêu cầu thất bại
+                            PreferenceManager.showToast(getContext(),Validation.ERR0_EX);
                         }
                     });
 
@@ -505,7 +510,7 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
     // Hàm callback khi người dùng bấm vào nút share
     @Override
     public void onClickShare(Reels reel) {
-
+        Toast.makeText(getContext(), "dang phat trien", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -543,6 +548,7 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
 
                         } else {
                             // Xử lý lỗi khi yêu cầu thất bại
+                            PreferenceManager.showToast(getContext(),Validation.ERR0_EX);
 
                         }
                     }
@@ -550,6 +556,7 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
                         // Xử lý lỗi khi yêu cầu thất bại
+                        PreferenceManager.showToast(getContext(),Validation.ERR0_EX);
                     }
                 });
 
@@ -583,6 +590,7 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
 
                         } else {
                             // Xử lý lỗi khi yêu cầu thất bại
+                            PreferenceManager.showToast(getContext(),Validation.ERR0_EX);
 
                         }
                     }
@@ -590,6 +598,7 @@ public class HomeFragment extends Fragment implements ReelsAdapter.OnReelsVideoA
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
                         // Xử lý lỗi khi yêu cầu thất bại
+                        PreferenceManager.showToast(getContext(),Validation.ERR0_EX);
                     }
                 });
 

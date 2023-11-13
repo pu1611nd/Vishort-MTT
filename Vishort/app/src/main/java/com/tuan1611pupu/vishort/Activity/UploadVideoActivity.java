@@ -144,7 +144,7 @@ public class UploadVideoActivity extends AppCompatActivity {
             float totalSeconds = durationMillis / 1000.0f;
 
             // Kiểm tra nếu thời gian video lớn hơn 90 giây
-            if (totalSeconds > 90) {
+            if (totalSeconds > 95) {
                 PreferenceManager.showToast(getApplicationContext(), Validation.VALIDATION_VIDEO_TIME);
                 // Thêm mã để hiển thị thông báo ở đây
             } else {

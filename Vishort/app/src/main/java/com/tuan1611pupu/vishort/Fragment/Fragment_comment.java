@@ -135,6 +135,7 @@ public class Fragment_comment extends BottomSheetDialogFragment {
 
                         } else {
                             // Xử lý lỗi khi yêu cầu thất bại
+                            PreferenceManager.showToast(getContext(),Validation.ERR0_EX);
 
                         }
                     }
@@ -142,6 +143,7 @@ public class Fragment_comment extends BottomSheetDialogFragment {
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
                         // Xử lý lỗi khi yêu cầu thất bại
+                        PreferenceManager.showToast(getContext(),Validation.ERR0_EX);
                     }
                 });
 

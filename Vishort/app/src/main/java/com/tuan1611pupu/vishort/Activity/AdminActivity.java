@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.tuan1611pupu.vishort.Fragment.FragmentAdminStatistical;
 import com.tuan1611pupu.vishort.Fragment.FragmentAdminUser;
 import com.tuan1611pupu.vishort.Fragment.FragmentAdminVideo;
 import com.tuan1611pupu.vishort.Fragment.HomeFragment;
@@ -56,6 +57,10 @@ public class AdminActivity extends AppCompatActivity {
                     transaction1.replace(R.id.container,new FragmentAdminVideo());
                     break;
                 case 1:
+                    binding.toolbar.setVisibility(View.GONE);
+                    transaction1.replace(R.id.container,new FragmentAdminStatistical());
+                    break;
+                case 2:
                     binding.toolbar.setVisibility(View.VISIBLE);
                     transaction1.replace(R.id.container,new FragmentAdminUser());
                     break;

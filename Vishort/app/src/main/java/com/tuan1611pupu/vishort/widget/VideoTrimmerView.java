@@ -58,8 +58,8 @@ public class VideoTrimmerView extends FrameLayout implements IVideoTrimmerView {
   private LinearLayout mSeekBarLayout;
   private ImageView mRedProgressIcon;
   private TextView mVideoShootTipTv;
-  private float mAverageMsPx;//每毫秒所占的px
-  private float averagePxMs;//每px所占用的ms毫秒
+  private float mAverageMsPx;
+  private float averagePxMs;
   private Uri mSourceUri;
   private VideoTrimListener mOnTrimVideoListener;
   private int mDuration = 0;

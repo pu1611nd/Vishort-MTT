@@ -22,11 +22,23 @@
         android:spinnerMode="dialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvUser"
-        android:layout_margin="10dp"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/textList"
+            android:visibility="gone"
+            android:textColor="@color/pink_main"
+            android:layout_gravity="center"
+            android:text="Danh sách trống"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvUser"
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
 
 
 </LinearLayout>

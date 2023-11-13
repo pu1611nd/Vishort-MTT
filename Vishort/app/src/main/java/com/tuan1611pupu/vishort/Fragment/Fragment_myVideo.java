@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +31,7 @@ public class Fragment_myVideo extends Fragment {
     private ArrayList<Reels> list;
     private UserPostVideoAdapter userPostVideoAdapter;
     private RecyclerView rcListVideo;
+    private TextView textNoti;
     private  FirebaseDatabase database;
     private PreferenceManager preferenceManager;
 
@@ -45,6 +47,7 @@ public class Fragment_myVideo extends Fragment {
         database = FirebaseDatabase.getInstance();
 
         rcListVideo = view.findViewById(R.id.rvPostVideo);
+        textNoti = view.findViewById(R.id.textList);
 
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         rcListVideo.setLayoutManager(staggeredGridLayoutManager);
@@ -71,6 +74,10 @@ public class Fragment_myVideo extends Fragment {
                                     reels.setReelsId(snapshot.getKey()); // Lấy mã ID của reels
                                     list.add(reels);
                                 }
+                            }
+                            if(list.size() == 0){
+                                rcListVideo.setVisibility(View.GONE);
+                                textNoti.setVisibility(View.VISIBLE);
                             }
                             userPostVideoAdapter.notifyDataSetChanged();
                         } else {

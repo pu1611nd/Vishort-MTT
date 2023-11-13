@@ -1,6 +1,7 @@
 package com.tuan1611pupu.vishort.Utilities;
 
 public class Validation {
+    public static final String ERR0_EX = "Lỗi hệ thống vui lòng thử lại sau vài phút";
     // account
     public static final String LOGIN_SUCCESS = "Đăng nhập thành công";
     public static final String LOGIN_FAIL = "Đăng nhập thất bại";
@@ -41,4 +42,10 @@ public class Validation {
     public static final String GET_INFO_E001 = "Lấy thông tin thất bại";
     public static final String VIDEO_LIST_NULL = "Danh sách video trống";
     public static final String USER_LIST_NULL = "Danh sách người dùng trống";
+
+    public static final String ERR0_TIME_NOW = "Ngày thời gian được chọn không thể lớn hơn ngày hiện tại.";
+    public static final String ERR0_TIME_BEGIN = "Ngày thời gian bắt đầu không thể lớn hơn ngày thời gian kết thúc.";
+    public static final String ERR0_TIME_END = "Ngày thời gian kết thúc không thể nhỏ hơn ngày thời gian bắt đầu.";
+
+
 }

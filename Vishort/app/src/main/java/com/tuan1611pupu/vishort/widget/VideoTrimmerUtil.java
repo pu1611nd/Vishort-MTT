@@ -27,11 +27,11 @@ import nl.bravobit.ffmpeg.FFmpeg;
 public class VideoTrimmerUtil {
 
   private static final String TAG = VideoTrimmerUtil.class.getSimpleName();
-  public static final long MIN_SHOOT_DURATION = 3000L;// 最小剪辑时间3s
-  public static final int VIDEO_MAX_TIME = 90;// 10秒
-  public static final long MAX_SHOOT_DURATION = VIDEO_MAX_TIME * 1000L;//视频最多剪切多长时间10s
+  public static final long MIN_SHOOT_DURATION = 3000L;// 3s
+  public static final int VIDEO_MAX_TIME = 90;// 10
+  public static final long MAX_SHOOT_DURATION = VIDEO_MAX_TIME * 1000L;//10s
 
-  public static final int MAX_COUNT_RANGE = 45;  //seekBar的区域内一共有多少张图片
+  public static final int MAX_COUNT_RANGE = 45;
   private static final int SCREEN_WIDTH_FULL = DeviceUtil.getDeviceWidth();
   public static final int RECYCLER_VIEW_PADDING = UnitConverter.dpToPx(35);
   public static final int VIDEO_FRAMES_WIDTH = SCREEN_WIDTH_FULL - RECYCLER_VIEW_PADDING * 2;

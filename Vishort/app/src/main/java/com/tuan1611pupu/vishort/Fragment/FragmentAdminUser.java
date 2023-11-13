@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,9 +33,10 @@ import retrofit2.Response;
 
 public class FragmentAdminUser extends Fragment {
 
-    private RecyclerView rcListVideo;
+    private RecyclerView rcListUser;
     private ArrayList<User3> list;
     private UserAdapter adapter;
+    private TextView textNoti;
 
     private Spinner spinnerStatus;
     private ArrayAdapter statusAdapter;
@@ -43,12 +45,13 @@ public class FragmentAdminUser extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_admin_user, container, false);
-        rcListVideo = view.findViewById(R.id.rvUser);
+        rcListUser = view.findViewById(R.id.rvUser);
+        textNoti = view.findViewById(R.id.textList);
         list = new ArrayList<>();
         adapter = new UserAdapter();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
-        rcListVideo.setLayoutManager(linearLayoutManager);
-        rcListVideo.setAdapter(adapter);
+        rcListUser.setLayoutManager(linearLayoutManager);
+        rcListUser.setAdapter(adapter);
 
         spinnerStatus = view.findViewById(R.id.status_spinner);
         List<String> options = new ArrayList<>();
@@ -111,6 +114,10 @@ public class FragmentAdminUser extends Fragment {
                     listUser = (ArrayList<User3>) response.body();
                     list.addAll(listUser);
                     adapter.addData(list);
+                    if(list.size() == 0){
+                        rcListUser.setVisibility(View.GONE);
+                        textNoti.setVisibility(View.VISIBLE);
+                    }
 
 
                 }else {

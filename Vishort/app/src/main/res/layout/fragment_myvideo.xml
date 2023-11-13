@@ -5,13 +5,25 @@
     android:orientation="vertical"
     android:background="@color/app_color"
     android:layout_height="match_parent">
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvPostVideo"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginHorizontal="5dp"
-        android:layout_marginBottom="60dp"
-        android:orientation="vertical"
-        tools:listitem="@layout/item_post_video" />
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/textList"
+            android:visibility="gone"
+            android:textColor="@color/pink_main"
+            android:layout_gravity="center"
+            android:text="Danh sách trống"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPostVideo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginBottom="60dp"
+            android:orientation="vertical"
+            tools:listitem="@layout/item_post_video" />
+    </FrameLayout>
 
 </LinearLayout>

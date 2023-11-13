@@ -1,28 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/black_main"
     android:layout_height="match_parent">
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_margin="15dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+
         <TextView
+            android:id="@+id/textTitle"
+            android:layout_margin="15dp"
             android:fontFamily="@font/montserratbold"
             android:text="Danh sách video"
             android:textColor="@color/pink_main"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <Spinner
-            android:layout_gravity="left"
-            android:gravity="left"
-            android:layout_marginTop="5dp"
-            android:id="@+id/status_spinner"
-            android:background="@drawable/round_shape"
-            android:spinnerMode="dialog"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+        <TextView
+            android:id="@+id/textTime"
+            android:layout_margin="15dp"
+            android:layout_gravity="end"
+            android:textColor="@color/white"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textTitle"
+            />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_margin="15dp"
+        app:layout_constraintTop_toBottomOf="@+id/textTime"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvListVideo"
             android:layout_marginTop="20dp"

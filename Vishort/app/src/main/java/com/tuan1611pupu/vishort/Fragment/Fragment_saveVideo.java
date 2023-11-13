@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +33,7 @@ public class Fragment_saveVideo extends Fragment {
     private ArrayList<Reels> list;
     private UserPostVideoAdapter userPostVideoAdapter;
     private RecyclerView rcListVideo;
+    private TextView textNoti;
     private PreferenceManager preferenceManager;
 
     @Nullable
@@ -44,6 +46,7 @@ public class Fragment_saveVideo extends Fragment {
         preferenceManager = new PreferenceManager(getContext());
 
         rcListVideo = view.findViewById(R.id.rvSaveVideo);
+        textNoti = view.findViewById(R.id.textList);
 
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         rcListVideo.setLayoutManager(staggeredGridLayoutManager);
@@ -66,7 +69,12 @@ public class Fragment_saveVideo extends Fragment {
                     if (newReelsList != null) {
                         list.clear(); // Xóa danh sách cũ
                         list.addAll(newReelsList); // Thêm danh sách mới
-                        userPostVideoAdapter.notifyDataSetChanged(); // Cập nhật adapter
+                        if(list.size() == 0){
+                            rcListVideo.setVisibility(View.GONE);
+                            textNoti.setVisibility(View.VISIBLE);
+                        }
+                        userPostVideoAdapter.notifyDataSetChanged();
+                        // Cập nhật adapter
                     } else {
                         // Xử lý trường hợp dữ liệu null
                     }

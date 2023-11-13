@@ -108,9 +108,9 @@ public interface DataService {
     @POST("get_like.php")
     Call<Like> getLike(@Field("likeId") String likeId);
 
-
-    @GET("get_listVideo.php")
-    Call<List<Video>> getListVideo();
+    @FormUrlEncoded
+    @POST("get_listVideo.php")
+    Call<List<Video>> getListVideo(@Field("timeStart")long timeStart , @Field("timeEnd")long timeEnd);
 
     @GET("get_listUser.php")
     Call<List<User3>> getListUser();

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,6 +39,7 @@ import java.util.List;
 public class Fragment_List_Chat extends Fragment implements ConversionListener {
 
     private RecyclerView recyclerView;
+    private TextView textNoti;
     private ProgressBar progressBar;
     private PreferenceManager preferenceManager;
     private List<ChatMessage> conversations;
@@ -52,6 +54,7 @@ public class Fragment_List_Chat extends Fragment implements ConversionListener {
         preferenceManager = new PreferenceManager(getContext());
         recyclerView = view.findViewById(R.id.conversationRecyclerView);
         progressBar = view.findViewById(R.id.progressBarListChat);
+        textNoti = view.findViewById(R.id.textList);
         init();
         listenConversation();
         return view;
@@ -99,6 +102,10 @@ public class Fragment_List_Chat extends Fragment implements ConversionListener {
                 recyclerView.smoothScrollToPosition(0);
                 recyclerView.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
+                if(conversations.size() == 0){
+                    recyclerView.setVisibility(View.GONE);
+                    textNoti.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
